@@ -3,3 +3,5 @@ djangorestframework
 djongo
 pymongo
 python-dotenv
+pytz
+Pillow

@@ -1,5 +1,5 @@
 """
-URL configuration for SmartShelf project.
+URL configuration for smartshelf project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.0/topics/http/urls/
@@ -17,6 +17,19 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from django.contrib import admin
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from accounts.views import UserViewSet
+from books.view import BookViewSet, RatingViewSet, CommentViewSet
+
+router = DefaultRouter()
+router.register(r'users', UserViewSet)
+router.register(r'books', BookViewSet)
+router.register(r'ratings', RatingViewSet)
+router.register(r'comments', CommentViewSet)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include(router.urls)),
 ]
