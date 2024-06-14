@@ -2,48 +2,51 @@
 <html lang="en">
 <head>
     <title>My SmartShelf</title>
+    {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
 </head>
 <body>
-<h1>My SmartShelf</h1>
-<div class="shelf">
-    <h2>Read Later</h2>
-    <ul>
-        {% for shelf_item in read_later %}
-            <li>
-                <a href="{% url 'book_detail' shelf_item.book.id %}">
-                    <img src="{{ shelf_item.book.img }}" alt="{{ shelf_item.book.title }} cover">
-                    <span>{{ shelf_item.book.title }}</span>
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
-</div>
-<div class="shelf">
-    <h2>Already Read</h2>
-    <ul>
-        {% for shelf_item in already_read %}
-            <li>
-                <a href="{% url 'book_detail' shelf_item.book.id %}">
-                    <img src="{{ shelf_item.book.img }}" alt="{{ shelf_item.book.title }} cover">
-                    <span>{{ shelf_item.book.title }}</span>
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
-</div>
-<div class="shelf">
-    <h2>Rated</h2>
-    <ul>
-        {% for shelf_item in rated %}
-            <li>
-                <a href="{% url 'book_detail' shelf_item.book.id %}">
-                    <img src="{{ shelf_item.book.img }}" alt="{{ shelf_item.book.title }} cover">
-                    <span>{{ shelf_item.book.title }}</span>
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
-</div>
+    <div class="container">
+        <h1>My SmartShelf</h1>
+        <div class="shelf">
+            <h2>Read Later</h2>
+            <ul>
+                {% for shelf_item in read_later %}
+                <li>
+                    <a href="{% url 'book_detail' shelf_item.book.id %}">
+                        <img src="{{ shelf_item.book.img }}" alt="{{ shelf_item.book.title }} cover">
+                        <span>{{ shelf_item.book.title }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="shelf">
+            <h2>Already Read</h2>
+            <ul>
+                {% for shelf_item in already_read %}
+                <li>
+                    <a href="{% url 'book_detail' shelf_item.book.id %}">
+                        <img src="{{ shelf_item.book.img }}" alt="{{ shelf_item.book.title }} cover">
+                        <span>{{ shelf_item.book.title }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="shelf">
+            <h2>Rated</h2>
+            <ul>
+                {% for shelf_item in rated %}
+                <li>
+                    <a href="{% url 'book_detail' shelf_item.book.id %}">
+                        <img src="{{ shelf_item.book.img }}" alt="{{ shelf_item.book.title }} cover">
+                        <span>{{ shelf_item.book.title }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 </body>
 </html>

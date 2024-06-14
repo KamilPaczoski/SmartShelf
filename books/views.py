@@ -1,23 +1,24 @@
-from rest_framework import viewsets, generics
-from .models import Book, Rating, Comment, Shelf
-from .serializers import BookSerializer, RatingSerializer, CommentSerializer, ShelfSerializer
+from django.shortcuts import render, get_object_or_404
+from .models import Book, Shelf
 
 
-class BookViewSet(viewsets.ModelViewSet):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
+def book_list(request):
+    books = Book.objects.all()
+    return render(request, 'book_list.html', {'books': books})
 
 
-class ShelfViewSet(viewsets.ModelViewSet):
-    queryset = Shelf.objects.all()
-    serializer_class = ShelfSerializer
+def book_detail(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+    comments = book.comments_set.all()
+    return render(request, 'book_detail.html', {'book': book, 'comments': comments})
 
 
-class RatingViewSet(viewsets.ModelViewSet):
-    queryset = Rating.objects.all()
-    serializer_class = RatingSerializer
+def user_shelf(request):
+    read_later = Shelf.objects.filter(user=request.user, shelf_type='read_later')
+    already_read = Shelf.objects.filter(user=request.user, shelf_type='already_read')
+    rated = Shelf.objects.filter(user=request.user, shelf_type='rated')
+    return render(request, 'user_shelf.html', {'read_later': read_later, 'already_read': already_read, 'rated': rated})
 
 
-class CommentViewSet(viewsets.ModelViewSet):
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
+def account_settings(request):
+    return render(request, 'account_settings.html')

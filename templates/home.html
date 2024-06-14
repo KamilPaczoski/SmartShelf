@@ -2,16 +2,19 @@
 <html lang="en">
 <head>
     <title>SmartShelf Home</title>
+    {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
 </head>
 <body>
-    <h1>Welcome to SmartShelf</h1>
-    <nav>
-        <ul>
-            <li><a href="{% url 'user_shelf' %}">My Shelf</a></li>
-            <li><a href="{% url 'account_settings' %}">Account Settings</a></li>
-            <li><a href="{% url 'book_list' %}">Explore Books</a></li>
-        </ul>
-    </nav>
+    <div class="container">
+        <h1>Welcome to SmartShelf</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'user_shelf' %}">My Shelf</a></li>
+                <li><a href="{% url 'account_settings' %}">Account Settings</a></li>
+                <li><a href="{% url 'book_list' %}">Explore Books</a></li>
+            </ul>
+        </nav>
+    </div>
 </body>
 </html>

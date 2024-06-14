@@ -1,0 +1,181 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+h1, h2 {
+    color: #555;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 10px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Container */
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Book list */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+ul li img {
+    width: 50px;
+    height: 75px;
+    margin-right: 10px;
+}
+
+ul li span {
+    font-size: 1.1em;
+}
+
+/* Forms */
+form {
+    margin: 20px 0;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form input[type="number"],
+form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+form button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
+
+/* Book details */
+.book-detail {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.book-detail img {
+    width: 150px;
+    height: 225px;
+    margin-right: 20px;
+}
+
+.book-detail div {
+    max-width: 600px;
+}
+
+/* Book rating and comments */
+.book-rating,
+.book-comments {
+    margin-top: 20px;
+}
+
+.book-comments ul {
+    list-style: none;
+    padding: 0;
+}
+
+.book-comments ul li {
+    margin-bottom: 10px;
+}
+
+/* Shelves */
+.shelf {
+    margin-bottom: 20px;
+}
+
+.shelf ul {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.shelf ul li {
+    flex: 1 0 21%;
+    margin: 10px;
+}
+
+.shelf ul li img {
+    width: 100%;
+    height: auto;
+}
+
+/* Account settings */
+.account-settings form {
+    margin: 20px 0;
+}
+
+.account-settings label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.account-settings input[type="text"],
+.account-settings input[type="email"],
+.account-settings input[type="file"],
+.account-settings input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.account-settings button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.account-settings button:hover {
+    background-color: #0056b3;
+}
