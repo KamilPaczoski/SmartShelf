@@ -3,8 +3,9 @@ from django.db import models
 
 
 class CustomUser(AbstractUser):
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True, default='avatars/default.png')
     bio = models.TextField(null=True, blank=True)
+    email = models.EmailField(unique=True)
     groups = models.ManyToManyField(
         'auth.Group',
         related_name='customuser_set',  # Unique related_name for CustomUser

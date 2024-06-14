@@ -1,7 +1,9 @@
-Django
-djangorestframework
+Django~=5.0.6
+djangorestframework~=3.15.1
 djongo
 pymongo
-python-dotenv
+python-dotenv~=1.0.1
 pytz
 Pillow
+pandas~=2.2.2
+SQLAlchemy~=2.0.30

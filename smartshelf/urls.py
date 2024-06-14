@@ -21,7 +21,8 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from accounts.views import UserViewSet
-from books.view import BookViewSet, RatingViewSet, CommentViewSet
+from books.views import BookViewSet, RatingViewSet, CommentViewSet
+from .views import home
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -31,5 +32,7 @@ router.register(r'comments', CommentViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),
+    path('api/accounts/', include('accounts.urls')),
+    path('api/books/', include('books.urls')),
+    path('', home, name='home'),  # Add this line
 ]

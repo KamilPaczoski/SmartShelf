@@ -9,7 +9,7 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv('SECRET_KEY', 'your-default-secret-key')
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
@@ -58,19 +58,14 @@ TEMPLATES = [
 WSGI_APPLICATION = 'smartshelf.wsgi.application'
 ASGI_APPLICATION = 'smartshelf.asgi.application'
 
-# Database
-user = os.getenv('MONGO_DB_USER')
-password = os.getenv('MONGO_DB_PASSWORD')
-host = os.getenv('MONGO_DB_HOST')
-db_name = os.getenv('MONGO_DB_NAME')
-
 DATABASES = {
     'default': {
-        'ENGINE': 'djongo',
-        'NAME': db_name,
-        'CLIENT': {
-            'host': f"mongodb+srv://{user}:{password}@{host}/?retryWrites=true&w=majority&appName=MainApp",
-        }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
@@ -97,4 +92,5 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / "static"]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

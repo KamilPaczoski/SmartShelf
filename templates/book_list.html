@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>All Books</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <h1>All Books</h1>
+    <ul>
+        {% for book in books %}
+        <li>
+            <a href="{% url 'book_detail' book.id %}">
+                <img src="{{ book.img }}" alt="{{ book.title }} cover">
+                <span>{{ book.title }}</span>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
