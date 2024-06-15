@@ -1,5 +1,13 @@
 from django.shortcuts import render, get_object_or_404
+
+from accounts.models import CustomUser
 from .models import Book, Shelf
+
+
+def admin_home(request):
+    users = CustomUser.objects.all()
+    books = Book.objects.all()
+    return render(request, 'admin_home.html', {'users': users, 'books': books})
 
 
 def book_list(request):
