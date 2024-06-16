@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Book, Shelf
-from accounts.models import CustomUser
+from django.db.models import Q
 
 
 @login_required
@@ -42,8 +42,24 @@ def account_settings(request):
 
 @login_required
 def book_list(request):
+    search_query = request.GET.get('search', '')
+    sort_by = request.GET.get('sort_by', 'title')
     books = Book.objects.all()
-    return render(request, 'book_list.html', {'books': books})
+    print("All Books:", books)
+
+    if search_query:
+        books = books.filter(Q(title__icontains=search_query) | Q(author__icontains=search_query))
+        print("Filtered Books:", books)
+
+    if sort_by == 'totalratings':
+        books = books.order_by('-totalratings')
+    elif sort_by == 'rating':
+        books = books.order_by('-rating')
+    else:
+        books = books.order_by('title')
+
+    print("Sorted Books:", books)
+    return render(request, 'book_list.html', {'books': books, 'search_query': search_query, 'sort_by': sort_by})
 
 
 @login_required

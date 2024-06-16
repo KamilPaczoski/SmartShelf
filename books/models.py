@@ -11,8 +11,11 @@ class Book(models.Model):
     img = models.URLField()
     isbn = models.CharField(max_length=13)
     pages = models.IntegerField()
-    totalratings = models.IntegerField(default=0, editable=False, blank=True)
-    rating = models.FloatField(default=0, editable=False, blank=True)
+    totalratings = models.IntegerField(default=0)
+    rating = models.FloatField(default=0)
+
+    def __str__(self):
+        return self.title
 
 
 class Rating(models.Model):
