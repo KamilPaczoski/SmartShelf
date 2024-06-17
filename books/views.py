@@ -45,11 +45,9 @@ def book_list(request):
     search_query = request.GET.get('search', '')
     sort_by = request.GET.get('sort_by', 'title')
     books = Book.objects.all()
-    print("All Books:", books)
 
     if search_query:
         books = books.filter(Q(title__icontains=search_query) | Q(author__icontains=search_query))
-        print("Filtered Books:", books)
 
     if sort_by == 'totalratings':
         books = books.order_by('-totalratings')
@@ -58,7 +56,6 @@ def book_list(request):
     else:
         books = books.order_by('title')
 
-    print("Sorted Books:", books)
     return render(request, 'book_list.html', {'books': books, 'search_query': search_query, 'sort_by': sort_by})
 
 
