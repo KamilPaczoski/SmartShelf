@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{ book.title }}</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>{{ book.title }}</h1>
+        <div class="book-detail">
+            <img src="{{ book.img }}" alt="{{ book.title }} cover">
+            <div>
+                <p>{{ book.desc }}</p>
+                <p><strong>Author:</strong> {{ book.author }}</p>
+                <p><strong>Genre:</strong> {{ book.genre }}</p>
+                <p><strong>Pages:</strong> {{ book.pages }}</p>
+                <p><strong>Format:</strong> {{ book.bookformat }}</p>
+            </div>
+        </div>
+        <div class="book-rating">
+            <h2>Rate this book</h2>
+            <form method="post">
+                {% csrf_token %}
+                <label for="rating">Rating (1-5):</label>
+                <input type="number" name="rating" id="rating" min="1" max="5">
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <div class="book-comments">
+            <h2>Comments</h2>
+            <ul>
+                {% for comment in comments %}
+                <li><strong>{{ comment.user.username }}:</strong> {{ comment.text }}</li>
+                {% endfor %}
+            </ul>
+            <form method="post">
+                {% csrf_token %}
+                <textarea name="comment" placeholder="Add a comment..."></textarea>
+                <button type="submit">Add Comment</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

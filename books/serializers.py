@@ -1,10 +1,16 @@
 from rest_framework import serializers
-from .models import Book, Rating, Comment
+from .models import Book, Rating, Comment, Shelf
 
 
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
+        fields = '__all__'
+
+
+class ShelfSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Shelf
         fields = '__all__'
 
 
