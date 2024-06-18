@@ -33,9 +33,9 @@
             </div>
         </div>
         <div class="shelf">
-            <h2>Already Read</h2>
+            <h2>Favourite</h2>
             <div class="shelf-row">
-                {% for shelf_item in already_read %}
+                {% for shelf_item in favourite %}
                 <div class="book-item">
                     {% if shelf_item.is_placeholder %}
                     <a href="{% url 'book_list' %}">

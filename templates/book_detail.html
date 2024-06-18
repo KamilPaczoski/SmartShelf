@@ -1,44 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <title>{{ book.title }}</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/rating.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
     <div class="container">
-        <h1>{{ book.title }}</h1>
         <div class="book-detail">
-            <img src="{{ book.img }}" alt="{{ book.title }} cover">
-            <div>
+            <img src="{{ book.img }}" alt="{{ book.title }} cover" class="book-cover">
+            <div class="book-info">
+                <h1>{{ book.title }}</h1>
+                <h2>{{ book.author }}</h2>
                 <p>{{ book.desc }}</p>
-                <p><strong>Author:</strong> {{ book.author }}</p>
-                <p><strong>Genre:</strong> {{ book.genre }}</p>
-                <p><strong>Pages:</strong> {{ book.pages }}</p>
-                <p><strong>Format:</strong> {{ book.bookformat }}</p>
+                <div class="book-buttons">
+                    <a href="{% url 'add_to_shelf' book.pk 'read_later' %}" class="button">Read Later</a>
+                    <a href="{% url 'add_to_shelf' book.pk 'favourite' %}" class="button">Favourite</a>
+                </div>
+                <div class="book-ratings">
+                    <div>Rating: {{ book.rating }}</div>
+                    <div>Total Ratings: {{ book.totalratings }}</div>
+                </div>
+                <div id="half-stars-example">
+                    <form method="post" action="{% url 'book_detail' book.pk %}">
+                        {% csrf_token %}
+                        <div class="rating-group">
+                            <label aria-label="0.5 stars" class="rating__label rating__label--half" for="rating2-05"><i class="rating__icon rating__icon--star fa fa-star-half"></i></label>
+                            <input class="rating__input" name="rating" id="rating2-05" value="0.5" type="radio">
+                            <label aria-label="1 star" class="rating__label" for="rating2-10"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                            <input class="rating__input" name="rating" id="rating2-10" value="1" type="radio">
+                            <label aria-label="1.5 stars" class="rating__label rating__label--half" for="rating2-15"><i class="rating__icon rating__icon--star fa fa-star-half"></i></label>
+                            <input class="rating__input" name="rating" id="rating2-15" value="1.5" type="radio">
+                            <label aria-label="2 stars" class="rating__label" for="rating2-20"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                            <input class="rating__input" name="rating" id="rating2-20" value="2" type="radio">
+                            <label aria-label="2.5 stars" class="rating__label rating__label--half" for="rating2-25"><i class="rating__icon rating__icon--star fa fa-star-half"></i></label>
+                            <input class="rating__input" name="rating" id="rating2-25" value="2.5" type="radio">
+                            <label aria-label="3 stars" class="rating__label" for="rating2-30"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                            <input class="rating__input" name="rating" id="rating2-30" value="3" type="radio">
+                            <label aria-label="3.5 stars" class="rating__label rating__label--half" for="rating2-35"><i class="rating__icon rating__icon--star fa fa-star-half"></i></label>
+                            <input class="rating__input" name="rating" id="rating2-35" value="3.5" type="radio">
+                            <label aria-label="4 stars" class="rating__label" for="rating2-40"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                            <input class="rating__input" name="rating" id="rating2-40" value="4" type="radio">
+                            <label aria-label="4.5 stars" class="rating__label rating__label--half" for="rating2-45"><i class="rating__icon rating__icon--star fa fa-star-half"></i></label>
+                            <input class="rating__input" name="rating" id="rating2-45" value="4.5" type="radio">
+                            <label aria-label="5 stars" class="rating__label" for="rating2-50"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                            <input class="rating__input" name="rating" id="rating2-50" value="5" type="radio">
+                        </div>
+                        <button type="submit">Submit Rating</button>
+                    </form>
+                </div>
             </div>
         </div>
-        <div class="book-rating">
-            <h2>Rate this book</h2>
-            <form method="post">
+        <div class="review-section">
+            <h3>Leave a Review</h3>
+            <form method="post" action="{% url 'book_detail' book.pk %}">
                 {% csrf_token %}
-                <label for="rating">Rating (1-5):</label>
-                <input type="number" name="rating" id="rating" min="1" max="5">
-                <button type="submit">Submit</button>
+                {{ form.as_p }}
+                <button type="submit">Send</button>
             </form>
         </div>
-        <div class="book-comments">
-            <h2>Comments</h2>
-            <ul>
-                {% for comment in comments %}
-                <li><strong>{{ comment.user.username }}:</strong> {{ comment.text }}</li>
-                {% endfor %}
-            </ul>
-            <form method="post">
-                {% csrf_token %}
-                <textarea name="comment" placeholder="Add a comment..."></textarea>
-                <button type="submit">Add Comment</button>
-            </form>
+        <div class="reviews">
+            <h3>Reviews</h3>
+            {% if user_rating %}
+                <div class="user-rating">
+                    <strong>Your latest rating: {{ user_rating.rating }} stars</strong>
+                </div>
+            {% endif %}
+            {% for review in reviews %}
+            <div class="review">
+                <img src="{{ review.user.avatar.url }}" alt="{{ review.user.username }}'s avatar" class="review-avatar">
+                <div class="review-content">
+                    <div><strong>{{ review.user.username }}</strong> on {{ review.date_posted }}</div>
+                    <p>{{ review.review }}</p>
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
 </body>

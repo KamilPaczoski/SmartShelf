@@ -1,13 +1,16 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Book, Shelf
+from .models import Book, Shelf, Review, Rating
+from accounts.models import CustomUser
 from django.db.models import Q
+from .forms import ReviewForm
+from django.db import IntegrityError
 
 
 @login_required
 def user_shelf(request):
     read_later = list(Shelf.objects.filter(user=request.user, shelf_type='read_later'))
-    already_read = list(Shelf.objects.filter(user=request.user, shelf_type='already_read'))
+    favourite = list(Shelf.objects.filter(user=request.user, shelf_type='favourite'))
     rated = list(Shelf.objects.filter(user=request.user, shelf_type='rated'))
 
     placeholder_img = '/static/images/book_cover_placeholder.png'  # Path to the placeholder image
@@ -24,12 +27,12 @@ def user_shelf(request):
         return shelf_list
 
     read_later = fill_placeholders(read_later)
-    already_read = fill_placeholders(already_read)
+    favourite = fill_placeholders(favourite)
     rated = fill_placeholders(rated)
 
     return render(request, 'user_shelf.html', {
         'read_later': read_later,
-        'already_read': already_read,
+        'favourite': favourite,
         'rated': rated,
         'placeholder_img': placeholder_img
     })
@@ -62,5 +65,40 @@ def book_list(request):
 @login_required
 def book_detail(request, pk):
     book = get_object_or_404(Book, pk=pk)
-    comments = book.comments_set.all()
-    return render(request, 'book_detail.html', {'book': book, 'comments': comments})
+    reviews = Review.objects.filter(book=book).order_by('-date_posted')
+    user_rating = Rating.objects.filter(user=request.user, book=book).first()
+
+    if request.method == 'POST':
+        if 'rating' in request.POST:
+            rating_value = float(request.POST.get('rating'))
+            rating, created = Rating.objects.update_or_create(
+                user=request.user,
+                book=book,
+                defaults={'rating': rating_value}
+            )
+            book.update_rating()
+            return redirect('book_detail', pk=book.pk)
+        else:
+            form = ReviewForm(request.POST)
+            if form.is_valid():
+                review = form.save(commit=False)
+                review.user = request.user
+                review.book = book
+                review.save()
+                return redirect('book_detail', pk=book.pk)
+    else:
+        form = ReviewForm()
+
+    return render(request, 'book_detail.html', {
+        'book': book,
+        'reviews': reviews,
+        'form': form,
+        'user_rating': user_rating
+    })
+
+
+@login_required
+def add_to_shelf(request, pk, shelf_type):
+    book = get_object_or_404(Book, pk=pk)
+    Shelf.objects.create(user=request.user, book=book, shelf_type=shelf_type)
+    return redirect('user_shelf')

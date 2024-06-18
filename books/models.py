@@ -1,6 +1,6 @@
 from django.db import models
-from accounts.models import CustomUser
-
+from django.conf import settings
+from django.db.models import Avg, Count
 
 class Book(models.Model):
     title = models.CharField(max_length=200)
@@ -12,28 +12,47 @@ class Book(models.Model):
     isbn = models.CharField(max_length=13)
     pages = models.IntegerField()
     totalratings = models.IntegerField(default=0)
-    rating = models.FloatField(default=0)
+    rating = models.FloatField(default=0.0)
+
+    def update_rating(self):
+        ratings = Rating.objects.filter(book=self).aggregate(Avg('rating'), Count('rating'))
+        self.rating = ratings['rating__avg'] or 0
+        self.totalratings = ratings['rating__count'] or 0
+        self.save()
 
     def __str__(self):
         return self.title
 
+class Shelf(models.Model):
+    SHELF_TYPES = [
+        ('read_later', 'Read Later'),
+        ('favourite', 'Favourite'),
+        ('rated', 'Rated')
+    ]
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    shelf_type = models.CharField(max_length=50, choices=SHELF_TYPES)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.book.title} ({self.shelf_type})"
+
+class Review(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    review = models.TextField()
+    date_posted = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.book.title}"
 
 class Rating(models.Model):
-    book = models.ForeignKey(Book, related_name='ratings', on_delete=models.CASCADE)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    score = models.FloatField(default=0)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='ratings')
+    rating = models.FloatField()
+    date_posted = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ('user', 'book')
 
-class Comment(models.Model):
-    book = models.ForeignKey(Book, related_name='comments', on_delete=models.CASCADE)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-
-class Shelf(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    shelf_type = models.CharField(max_length=20,
-                                  choices=[('read_later', 'Read Later'), ('already_read', 'Already Read'),
-                                           ('rated', 'Rated')])
+    def __str__(self):
+        return f"{self.user.username} - {self.book.title} ({self.rating})"
