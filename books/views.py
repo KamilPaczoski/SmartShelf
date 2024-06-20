@@ -67,6 +67,8 @@ def book_detail(request, pk):
     book = get_object_or_404(Book, pk=pk)
     reviews = Review.objects.filter(book=book).order_by('-date_posted')
     user_rating = Rating.objects.filter(user=request.user, book=book).first()
+    read_later = Shelf.objects.filter(user=request.user, book=book, shelf_type='read_later').exists()
+    favourite = Shelf.objects.filter(user=request.user, book=book, shelf_type='favourite').exists()
 
     if request.method == 'POST':
         if 'rating' in request.POST:
@@ -93,12 +95,16 @@ def book_detail(request, pk):
         'book': book,
         'reviews': reviews,
         'form': form,
-        'user_rating': user_rating
+        'user_rating': user_rating,
+        'read_later': read_later,
+        'favourite': favourite
     })
 
 
 @login_required
 def add_to_shelf(request, pk, shelf_type):
     book = get_object_or_404(Book, pk=pk)
-    Shelf.objects.create(user=request.user, book=book, shelf_type=shelf_type)
-    return redirect('user_shelf')
+    shelf, created = Shelf.objects.get_or_create(user=request.user, book=book, shelf_type=shelf_type)
+    if not created:
+        shelf.delete()
+    return redirect('book_detail', pk=pk)

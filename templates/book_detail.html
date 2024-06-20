@@ -9,6 +9,10 @@
 </head>
 <body>
     <div class="container">
+        <div class="buttons">
+            <a href="{% url 'user_shelf' %}" class="button">Personal Shelf</a>
+            <a href="{% url 'book_list' %}" class="button">Browse Books</a>
+        </div>
         <div class="book-detail">
             <img src="{{ book.img }}" alt="{{ book.title }} cover" class="book-cover">
             <div class="book-info">
@@ -16,8 +20,12 @@
                 <h2>{{ book.author }}</h2>
                 <p>{{ book.desc }}</p>
                 <div class="book-buttons">
-                    <a href="{% url 'add_to_shelf' book.pk 'read_later' %}" class="button">Read Later</a>
-                    <a href="{% url 'add_to_shelf' book.pk 'favourite' %}" class="button">Favourite</a>
+                    <a href="{% url 'add_to_shelf' book.pk 'read_later' %}" class="button {% if read_later %}active{% endif %}">
+                        {% if read_later %}Remove from Read Later{% else %}Add to Read Later{% endif %}
+                    </a>
+                    <a href="{% url 'add_to_shelf' book.pk 'favourite' %}" class="button {% if favourite %}active{% endif %}">
+                        {% if favourite %}Remove from Favourite{% else %}Add to Favourite{% endif %}
+                    </a>
                 </div>
                 <div class="book-ratings">
                     <div>Rating: {{ book.rating }}</div>

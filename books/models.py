@@ -33,6 +33,9 @@ class Shelf(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     shelf_type = models.CharField(max_length=50, choices=SHELF_TYPES)
 
+    class Meta:
+        unique_together = ('user', 'book', 'shelf_type')
+
     def __str__(self):
         return f"{self.user.username} - {self.book.title} ({self.shelf_type})"
 

@@ -1,45 +1,92 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <title>Account Settings</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
     <div class="container">
         <h1>Account Settings</h1>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <label for="username">Username:</label>
-            <input type="text" name="username" id="username" value="{{ user.username }}">
-
-            <label for="email">Email:</label>
-            <input type="email" name="email" id="email" value="{{ user.email }}">
-
-            <label for="avatar">Avatar:</label>
-            <input type="file" name="avatar" id="avatar">
-
-            <button type="submit">Update</button>
-        </form>
-        <h2>Change Password</h2>
-        <form method="post" action="{% url 'password_change' %}">
-            {% csrf_token %}
-            <label for="old_password">Old Password:</label>
-            <input type="password" name="old_password" id="old_password">
-
-            <label for="new_password1">New Password:</label>
-            <input type="password" name="new_password1" id="new_password1">
-
-            <label for="new_password2">Confirm New Password:</label>
-            <input type="password" name="new_password2" id="new_password2">
-
-            <button type="submit">Change Password</button>
-        </form>
-        <h2>Delete Account</h2>
+        <div class="account-settings">
+            <div class="left-side">
+                <img src="{{ user.avatar.url }}" alt="Avatar" class="avatar" >
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <button type="submit" name="update_avatar" class="btn btn-primary">Update Avatar</button>
+                </form>
+            </div>
+            <div class="right-side">
+                <h2>{{ user.username }}</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ user_form.email.label_tag }} {{ user_form.email }}
+                    </div>
+                    <div class="form-group">
+                        {{ user_form.bio.label_tag }} {{ user_form.bio }}
+                    </div>
+                    <button type="submit" name="update_details" class="btn btn-info">Save Bio and Email Changes</button>
+                </form>
+            </div>
+        </div>
+        <div class="info-sections">
+            <div class="info-box">
+                <h3>Achievements</h3>
+                <p>Coming Soon...</p>
+            </div>
+            <div class="info-box">
+                <h3>Change Password</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ password_form.old_password.label_tag }} {{ password_form.old_password }}
+                    </div>
+                    <div class="form-group">
+                        {{ password_form.new_password1.label_tag }} {{ password_form.new_password1 }}
+                    </div>
+                    <div class="form-group">
+                        {{ password_form.new_password2.label_tag }} {{ password_form.new_password2 }}
+                    </div>
+                    <button type="submit" name="change_password" class="btn btn-success">Save Password</button>
+                </form>
+            </div>
+            <div class="info-box">
+                <h3>Penalties</h3>
+                <p>Coming Soon...</p>
+            </div>
+        </div>
         <form method="post" action="{% url 'delete_account' %}">
             {% csrf_token %}
-            <button type="submit">Delete Account</button>
+            <button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#deleteAccountModal">Delete Account</button>
         </form>
+    </div>
+
+    <!-- Delete Account Modal -->
+    <div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteAccountModalLabel">Confirm Account Deletion</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete your account? This action cannot be undone.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <form method="post" action="{% url 'delete_account' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Yes, delete my account</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
