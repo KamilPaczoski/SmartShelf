@@ -1,24 +1,27 @@
 /* Account Settings Page */
 .account-settings {
     display: flex;
-    gap: 20px;
     margin-bottom: 20px;
+    justify-content: center;
 }
 
 .account-settings .left-side {
     flex: 1;
     text-align: center;
+    flex-basis: 10%;
 }
 
 .account-settings .left-side .avatar {
-    width: 150px;
-    height: 150px;
+    text-align: center;
+    height: auto;
+    max-width: 100%;
     border-radius: 50%;
     margin-bottom: 20px;
 }
 
 .account-settings .right-side {
     flex: 2;
+    text-align: center;
 }
 
 .account-settings .right-side h2 {
