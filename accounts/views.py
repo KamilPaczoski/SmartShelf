@@ -94,4 +94,4 @@ def delete_account(request):
     if request.method == 'POST':
         request.user.delete()
         return redirect('login_register')
-    return render(request, 'delete_account_confirm.html')
+    return render(request, 'account_settings.html')

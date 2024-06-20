@@ -1,0 +1,33 @@
+/* User Shelf Page */
+.shelf {
+    margin-top: 20px;
+}
+
+.shelf h2 {
+    color: #555;
+}
+
+.shelf-row {
+    display: flex;
+    overflow-x: auto;
+    padding: 10px 0;
+}
+
+.book-item {
+    flex: 0 0 16.66%;
+    text-align: center;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.book-item img {
+    width: 100%;
+    height: auto;
+    max-width: 150px; /* Ensure the images are not too large */
+    margin-bottom: 10px;
+}
+
+.book-item span {
+    display: block;
+    font-size: 1.1em;
+}

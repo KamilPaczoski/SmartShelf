@@ -1,0 +1,66 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.buttons {
+    margin-bottom: 20px;
+}
+
+.buttons a {
+    margin-right: 10px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.buttons a:hover {
+    background-color: #0056b3;
+}
+
+.delete-account-btn {
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.delete-account-btn:hover {
+    background-color: #c82333;
+}
+
+/* Delete Account Modal */
+.modal .modal-dialog {
+    max-width: 500px;
+}
+
+.modal .modal-content {
+    padding: 20px;
+}
+
+.modal .modal-footer {
+    display: flex;
+    justify-content: space-between;
+}

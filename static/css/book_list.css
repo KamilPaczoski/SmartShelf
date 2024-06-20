@@ -1,0 +1,62 @@
+/* Browse Books Page */
+.filter-options {
+    margin-bottom: 20px;
+}
+
+.filter-options form {
+    display: flex;
+    gap: 10px;
+}
+
+.filter-options input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.filter-options select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.filter-options button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.filter-options button:hover {
+    background-color: #0056b3;
+}
+
+.book-list table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.book-list th, .book-list td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+.book-list th {
+    background-color: #f4f4f4;
+}
+
+.book-list td img {
+    width: 100px;
+}
+
+.genre {
+    white-space: pre-line; /* Allows genres to display in multiple lines */
+}
+
+.rating, .totalratings {
+    text-align: center;
+}
