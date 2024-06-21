@@ -1,11 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Browse Books</title>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
-</head>
-<body>
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Book List{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/book_list.css' %}">
+{% endblock %}
+
+{% block content %}
     <div class="container">
         <h1>Browse Books</h1>
         <div class="filter-options">
@@ -13,7 +13,9 @@
                 <input type="text" name="search" placeholder="Search by title or author" value="{{ search_query }}">
                 <select name="sort_by">
                     <option value="title" {% if sort_by == 'title' %}selected{% endif %}>Sort by Title</option>
-                    <option value="totalratings" {% if sort_by == 'totalratings' %}selected{% endif %}>Sort by Total Ratings</option>
+                    <option value="totalratings" {% if sort_by == 'totalratings' %}selected{% endif %}>Sort by Total
+                        Ratings
+                    </option>
                     <option value="rating" {% if sort_by == 'rating' %}selected{% endif %}>Sort by Rating</option>
                 </select>
                 <button type="submit">Apply</button>
@@ -22,27 +24,30 @@
         <div class="book-list">
             <table>
                 <thead>
-                    <tr>
-                        <th>Cover</th>
-                        <th>Title & Author</th>
-                        <th>Genres</th>
-                        <th>Rating</th>
-                        <th>Total Ratings</th>
-                    </tr>
+                <tr>
+                    <th>Cover</th>
+                    <th>Title & Author</th>
+                    <th>Genres</th>
+                    <th>Rating</th>
+                    <th>Total Ratings</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {% for book in books %}
+                {% for book in books %}
                     <tr>
-                        <td><a href="{% url 'book_detail' book.id %}"><img src="{{ book.img }}" alt="{{ book.title }} cover" style="width: 100px;"></a></td>
+                        <td><a href="{% url 'book_detail' book.id %}"><img src="{{ book.img }}"
+                                                                           alt="{{ book.title }} cover"
+                                                                           style="width: 100px;"></a></td>
                         <td><a href="{% url 'book_detail' book.id %}">{{ book.title }}</a><br>{{ book.author }}</td>
-                        <td><div class="genre">{{ book.genre|linebreaksbr }}</div></td>
-                        <td>{{ book.rating }}</td>
+                        <td>
+                            <div class="genre">{{ book.genre|linebreaksbr }}</div>
+                        </td>
+                        <td>{{ book.rating|floatformat:2 }}</td>
                         <td>{{ book.totalratings }}</td>
                     </tr>
-                    {% endfor %}
+                {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
-</body>
-</html>
+{% endblock %}
