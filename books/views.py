@@ -1,41 +1,39 @@
-from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Book, Shelf, Review, Rating
-from accounts.models import CustomUser
 from django.db.models import Q
+from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import render
+
 from .forms import ReviewForm
-from django.db import IntegrityError
+from .models import Book, Rating, Shelf
+from .models import Review
 
 
 @login_required
 def user_shelf(request):
-    read_later = list(Shelf.objects.filter(user=request.user, shelf_type='read_later'))
-    favourite = list(Shelf.objects.filter(user=request.user, shelf_type='favourite'))
-    rated = list(Shelf.objects.filter(user=request.user, shelf_type='rated'))
+    user = request.user
+    read_later_books = Shelf.objects.filter(user=user, shelf_type='read_later').select_related('book')
+    favourite_books = Shelf.objects.filter(user=user, shelf_type='favourite').select_related('book')
+    rated_books = Rating.objects.filter(user=user).select_related('book')
 
-    placeholder_img = '/static/images/book_cover_placeholder.png'  # Path to the placeholder image
+    # Generate placeholder books if necessary
+    placeholder_img = '/static/images/book_cover_placeholder.png'
+    num_placeholders = max(0, 6 - read_later_books.count())
+    read_later_books = list(read_later_books) + [Book(title='Placeholder', img=placeholder_img)] * num_placeholders
 
-    def fill_placeholders(shelf_list):
-        while len(shelf_list) < 6:
-            shelf_list.append({
-                'book': {
-                    'img': placeholder_img,
-                    'title': 'Placeholder'
-                },
-                'is_placeholder': True
-            })
-        return shelf_list
+    num_placeholders = max(0, 6 - favourite_books.count())
+    favourite_books = list(favourite_books) + [Book(title='Placeholder', img=placeholder_img)] * num_placeholders
 
-    read_later = fill_placeholders(read_later)
-    favourite = fill_placeholders(favourite)
-    rated = fill_placeholders(rated)
+    num_placeholders = max(0, 6 - rated_books.count())
+    rated_books = list(rated_books) + [Book(title='Placeholder', img=placeholder_img)] * num_placeholders
 
-    return render(request, 'user_shelf.html', {
-        'read_later': read_later,
-        'favourite': favourite,
-        'rated': rated,
-        'placeholder_img': placeholder_img
-    })
+    context = {
+        'read_later': read_later_books,
+        'favourite': favourite_books,
+        'rated': rated_books,
+        'placeholder_img': placeholder_img,
+    }
+
+    return render(request, 'user_shelf.html', context)
 
 
 @login_required

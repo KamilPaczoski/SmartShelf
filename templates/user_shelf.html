@@ -1,7 +1,7 @@
 {% extends "base.html" %}
+{% load static %}
+{% block title %}{{ user.username }}'s SmartShelf {% endblock %}
 {% block extra_css %}
-    <title>Login/Register</title>
-    {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/user_shelf.css' %}">
 {% endblock %}
 
@@ -17,16 +17,16 @@
             <div class="shelf-row">
                 {% for item in read_later %}
                     <div class="book-item">
-                        {% if not item.is_placeholder %}
+                        {% if item.title != 'Placeholder' %}
                             <a href="{% url 'book_detail' item.book.pk %}">
                                 <img src="{{ item.book.img }}" alt="{{ item.book.title }} cover">
                             </a>
                             <span>{{ item.book.title }}</span>
                         {% else %}
                             <a href="{% url 'book_list' %}">
-                                <img src="{{ item.book.img }}" alt="Placeholder cover">
+                                <img src="{{ placeholder_img }}" alt="Placeholder cover">
                             </a>
-                            <span>Placeholder</span>
+                            <span>Add more Books!</span>
                         {% endif %}
                     </div>
                 {% endfor %}
@@ -37,16 +37,16 @@
             <div class="shelf-row">
                 {% for item in favourite %}
                     <div class="book-item">
-                        {% if not item.is_placeholder %}
+                        {% if item.title != 'Placeholder' %}
                             <a href="{% url 'book_detail' item.book.pk %}">
                                 <img src="{{ item.book.img }}" alt="{{ item.book.title }} cover">
                             </a>
                             <span>{{ item.book.title }}</span>
                         {% else %}
                             <a href="{% url 'book_list' %}">
-                                <img src="{{ item.book.img }}" alt="Placeholder cover">
+                                <img src="{{ placeholder_img }}" alt="Placeholder cover">
                             </a>
-                            <span>Placeholder</span>
+                            <span>Add more Books!</span>
                         {% endif %}
                     </div>
                 {% endfor %}
@@ -57,16 +57,16 @@
             <div class="shelf-row">
                 {% for item in rated %}
                     <div class="book-item">
-                        {% if not item.is_placeholder %}
+                        {% if item.title != 'Placeholder' %}
                             <a href="{% url 'book_detail' item.book.pk %}">
                                 <img src="{{ item.book.img }}" alt="{{ item.book.title }} cover">
                             </a>
                             <span>{{ item.book.title }}</span>
                         {% else %}
                             <a href="{% url 'book_list' %}">
-                                <img src="{{ item.book.img }}" alt="Placeholder cover">
+                                <img src="{{ placeholder_img }}" alt="Placeholder cover">
                             </a>
-                            <span>Placeholder</span>
+                            <span>Rate more books!</span>
                         {% endif %}
                     </div>
                 {% endfor %}

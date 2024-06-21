@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.db.models import Avg, Count
 
+
 class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=200)
@@ -12,7 +13,7 @@ class Book(models.Model):
     isbn = models.CharField(max_length=13)
     pages = models.IntegerField()
     totalratings = models.IntegerField(default=0)
-    rating = models.FloatField(default=0.0)
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
 
     def update_rating(self):
         ratings = Rating.objects.filter(book=self).aggregate(Avg('rating'), Count('rating'))
@@ -22,6 +23,7 @@ class Book(models.Model):
 
     def __str__(self):
         return self.title
+
 
 class Shelf(models.Model):
     SHELF_TYPES = [
@@ -39,6 +41,7 @@ class Shelf(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.book.title} ({self.shelf_type})"
 
+
 class Review(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
@@ -46,7 +49,8 @@ class Review(models.Model):
     date_posted = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.book.title}"
+        return f'Review by {self.user} on {self.book}'
+
 
 class Rating(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -58,4 +62,4 @@ class Rating(models.Model):
         unique_together = ('user', 'book')
 
     def __str__(self):
-        return f"{self.user.username} - {self.book.title} ({self.rating})"
+        return f'{self.user} rated {self.book}'

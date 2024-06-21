@@ -1,8 +1,7 @@
 {% extends "base.html" %}
-
+{% load static %}
+{% block title %}Account Settings of {{ user.username }} {% endblock %}
 {% block extra_css %}
-    <title>Account Settings</title>
-    {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/account_settings.css' %}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -90,8 +89,8 @@
     </div>
 
     <!-- Upload Avatar Modal -->
-    <div class="modal fade" id="uploadAvatarModal" tabindex="-1" role="dialog" aria-labelledby="uploadAvatarModalLabel"
-         aria-hidden="true">
+    <dialog class="modal fade" id="uploadAvatarModal" tabindex="-1" aria-labelledby="uploadAvatarModalLabel"
+            aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -115,10 +114,10 @@
                 </div>
             </div>
         </div>
-    </div>
+    </dialog>
 
     <!-- Delete Account Modal -->
-    <div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog"
+    <dialog class="modal fade" id="deleteAccountModal" tabindex="-1"
          aria-labelledby="deleteAccountModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -141,7 +140,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </dialog>
 
     <script>
         document.getElementById("saveAvatarButton").addEventListener("click", function () {

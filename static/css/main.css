@@ -12,7 +12,7 @@ body {
     margin: 0 auto;
     padding: 20px;
     background-color: #fff;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
@@ -68,11 +68,44 @@ h1 {
 /* Logo styles */
 .logo-container {
     text-align: center;
-    margin-bottom: 2px;
+    flex-grow: 1;
 }
 
 .logo {
     width: 40%;
     height: auto;
     cursor: pointer;
+    padding-left: 60px;
+}
+
+/* Log out styles */
+
+/* Header styles */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.logout-container {
+    text-align: right;
+    right: 80px;
+    top: 40px;
+}
+
+.logout-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.logout-button:hover {
+    background-color: #0056b3;
 }
