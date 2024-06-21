@@ -1,30 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <title>Login/Register</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/login_register.css' %}">
 </head>
-
 <body>
     <div class="container">
+        <h1>Login/Register</h1>
         <div class="form-container">
             <div class="form-left">
                 <h2>Login</h2>
                 <form method="post">
                     {% csrf_token %}
-                    {{ login_form.non_field_errors }}
-                    <div>
-                        <label for="id_username">Username:</label>
-                        {{ login_form.username }}
-                        {{ login_form.username.errors }}
-                    </div>
-                    <div>
-                        <label for="id_password">Password:</label>
-                        {{ login_form.password }}
-                        {{ login_form.password.errors }}
-                    </div>
+                    {{ login_form.as_p }}
                     <button type="submit" name="login">Login</button>
                 </form>
             </div>
@@ -32,32 +22,7 @@
                 <h2>Register</h2>
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    {{ registration_form.non_field_errors }}
-                    <div>
-                        <label for="id_username">Username:</label>
-                        {{ registration_form.username }}
-                        {{ registration_form.username.errors }}
-                    </div>
-                    <div>
-                        <label for="id_email">Email:</label>
-                        {{ registration_form.email }}
-                        {{ registration_form.email.errors }}
-                    </div>
-                    <div>
-                        <label for="id_avatar">Avatar (optional):</label>
-                        {{ registration_form.avatar }}
-                        {{ registration_form.avatar.errors }}
-                    </div>
-                    <div>
-                        <label for="id_password1">Password:</label>
-                        {{ registration_form.password1 }}
-                        {{ registration_form.password1.errors }}
-                    </div>
-                    <div>
-                        <label for="id_password2">Confirm Password:</label>
-                        {{ registration_form.password2 }}
-                        {{ registration_form.password2.errors }}
-                    </div>
+                    {{ registration_form.as_p }}
                     <button type="submit" name="register">Register</button>
                 </form>
             </div>

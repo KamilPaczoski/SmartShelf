@@ -2,34 +2,11 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
-from django import forms
 from .models import CustomUser
-from .forms import UserUpdateForm, CustomPasswordChangeForm
-from django.contrib.auth import logout
+from .forms import UserUpdateForm, CustomPasswordChangeForm, CustomUserCreationForm
 
 
-class RegistrationForm(forms.ModelForm):
-    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
-    avatar = forms.ImageField(required=False)
-
-    class Meta:
-        model = CustomUser
-        fields = ['username', 'email', 'avatar']
-
-    def clean_password2(self):
-        cd = self.cleaned_data
-        if cd['password1'] != cd['password2']:
-            raise forms.ValidationError('Passwords don’t match.')
-        return cd['password2']
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.set_password(self.cleaned_data['password1'])
-        if commit:
-            user.save()
-        return user
-
+# todo: fix issue with editing by user his avatar on account settings page
 
 def login_register(request):
     if request.method == 'POST':
@@ -47,13 +24,16 @@ def login_register(request):
                     else:
                         return redirect('user_shelf')
         elif 'register' in request.POST:
-            registration_form = RegistrationForm(request.POST, request.FILES)
+            registration_form = CustomUserCreationForm(request.POST, request.FILES)
             if registration_form.is_valid():
-                registration_form.save()
+                user = registration_form.save(commit=False)
+                if 'avatar' in request.FILES:
+                    user.avatar = request.FILES['avatar']
+                user.save()
                 return redirect('login_register')
     else:
         login_form = AuthenticationForm()
-        registration_form = RegistrationForm()
+        registration_form = CustomUserCreationForm()
 
     return render(request, 'login_register.html', {
         'login_form': login_form,
@@ -94,4 +74,3 @@ def delete_account(request):
     if request.method == 'POST':
         request.user.delete()
         return redirect('login_register')
-    return render(request, 'account_settings.html')
