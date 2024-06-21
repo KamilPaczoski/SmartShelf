@@ -26,3 +26,4 @@ class CustomPasswordChangeForm(PasswordChangeForm):
     old_password = forms.CharField(label="Old Password", widget=forms.PasswordInput)
     new_password1 = forms.CharField(label="New Password", widget=forms.PasswordInput)
     new_password2 = forms.CharField(label="Repeat New Password", widget=forms.PasswordInput)
+

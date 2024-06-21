@@ -9,86 +9,142 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-
 <body>
-    <div class="container">
-        <h1>Account Settings</h1>
-        <div class="account-settings">
+<div class="container">
+    <h1>Account Settings</h1>
+    <div class="account-settings">
+        <div class="left-side">
+            <img src="{{ user.avatar.url }}" alt="Avatar" class="avatar">
             <div class="left-side">
-                <img src="{{ user.avatar.url }}" alt="Avatar" class="avatar" >
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <button type="submit" name="update_avatar" class="btn btn-primary">Update Avatar</button>
-                </form>
-            </div>
-            <div class="right-side">
-                <h2>{{ user.username }}</h2>
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        {{ user_form.email.label_tag }} {{ user_form.email }}
-                    </div>
-                    <div class="form-group">
-                        {{ user_form.bio.label_tag }} {{ user_form.bio }}
-                    </div>
-                    <button type="submit" name="update_details" class="btn btn-info">Save Bio and Email Changes</button>
-                </form>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadAvatarModal">
+                    Upload
+                    Avatar
+                </button>
             </div>
         </div>
-        <div class="info-sections">
-            <div class="info-box">
-                <h3>Achievements</h3>
-                <p>Coming Soon...</p>
-            </div>
-            <div class="info-box">
-                <h3>Change Password</h3>
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        {{ password_form.old_password.label_tag }} {{ password_form.old_password }}
-                    </div>
-                    <div class="form-group">
-                        {{ password_form.new_password1.label_tag }} {{ password_form.new_password1 }}
-                    </div>
-                    <div class="form-group">
-                        {{ password_form.new_password2.label_tag }} {{ password_form.new_password2 }}
-                    </div>
-                    <button type="submit" name="change_password" class="btn btn-success">Save Password</button>
-                </form>
-            </div>
-            <div class="info-box">
-                <h3>Penalties</h3>
-                <p>Coming Soon...</p>
-            </div>
-        </div>
-        <form method="post" action="{% url 'delete_account' %}">
-            {% csrf_token %}
-            <button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#deleteAccountModal">Delete Account</button>
-        </form>
-    </div>
 
-    <!-- Delete Account Modal -->
-    <div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteAccountModalLabel">Confirm Account Deletion</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+        <div class="right-side">
+            <h2>{{ user.username }}</h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ user_form.email.label_tag }} 
+                    <div class="form-group">
+                        {{ user_form.email }}
+                    </div>
                 </div>
-                <div class="modal-body">
-                    Are you sure you want to delete your account? This action cannot be undone.
+                <div class="form-group">
+                    {{ user_form.bio.label_tag }}
+                    <div class="form-group">
+                        {{ user_form.bio }}
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <form method="post" action="{% url 'delete_account' %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">Yes, delete my account</button>
-                    </form>
+
+                <button type="submit" name="update_details" class="btn btn-info">Save Changes</button>
+            </form>
+        </div>
+    </div>
+    <div class="info-sections">
+        <div class="info-box">
+            <h3>Achievements</h3>
+            <p>Coming Soon...</p>
+        </div>
+        <div class="info-box">
+            <h3>Change Password</h3>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ password_form.old_password.label_tag }}
+                    <div class="form-group">
+                        {{ password_form.old_password }}
+                    </div>
                 </div>
+                <div class="form-group">
+                    {{ password_form.new_password1.label_tag }}
+                    <div class="form-group">
+                        {{ password_form.new_password1 }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ password_form.new_password2.label_tag }}
+                    <div class="form-group">
+                        {{ password_form.new_password2 }}
+                    </div>
+                </div>
+                <button type="submit" name="change_password" class="btn btn-success">Save Password</button>
+            </form>
+        </div>
+        <div class="info-box">
+            <h3>Penalties</h3>
+            <p>Coming Soon...</p>
+        </div>
+    </div>
+    <form method="post" action="{% url 'delete_account' %}">
+        {% csrf_token %}
+        <button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#deleteAccountModal">
+            Delete
+            Account
+        </button>
+    </form>
+</div>
+
+<!-- Upload Avatar Modal -->
+<div class="modal fade" id="uploadAvatarModal" tabindex="-1" role="dialog" aria-labelledby="uploadAvatarModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="uploadAvatarModalLabel">Upload New Avatar</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" enctype="multipart/form-data" id="uploadAvatarForm">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="avatar">Choose a new avatar</label>
+                        <input type="file" class="form-control" name="avatar" id="avatar" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveAvatarButton">Save</button>
             </div>
         </div>
     </div>
+</div>
+
+<!-- Delete Account Modal -->
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog" aria-labelledby="deleteAccountModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteAccountModalLabel">Confirm Account Deletion</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete your account? This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <form method="post" action="{% url 'delete_account' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Yes, delete my account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("saveAvatarButton").addEventListener("click", function () {
+        document.getElementById("uploadAvatarForm").submit();
+    });
+</script>
 </body>
 </html>

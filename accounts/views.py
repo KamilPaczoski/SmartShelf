@@ -1,12 +1,10 @@
-from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, update_session_auth_hash
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
-from .models import CustomUser
+from django.contrib.auth.forms import AuthenticationForm
+from django.shortcuts import render, redirect
+
 from .forms import UserUpdateForm, CustomPasswordChangeForm, CustomUserCreationForm
 
-
-# todo: fix issue with editing by user his avatar on account settings page
 
 def login_register(request):
     if request.method == 'POST':
@@ -59,6 +57,10 @@ def account_settings(request):
             user = request.user
             user.delete()
             return redirect('login_register')
+        elif 'avatar' in request.FILES:
+            request.user.avatar = request.FILES['avatar']
+            request.user.save()
+            return redirect('account_settings')
     else:
         user_form = UserUpdateForm(instance=request.user)
         password_form = CustomPasswordChangeForm(user=request.user)
