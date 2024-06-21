@@ -1,12 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login/Register</title>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/login_register.css' %}">
-</head>
-<body>
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/login_register.css' %}">
+{% endblock %}
+
+{% block content %}
     <div class="container">
         <h1>Login/Register</h1>
         <div class="form-container">
@@ -28,5 +27,4 @@
             </div>
         </div>
     </div>
-</body>
-</html>
+{% endblock %}

@@ -64,3 +64,15 @@ h1 {
     display: flex;
     justify-content: space-between;
 }
+
+/* Logo styles */
+.logo-container {
+    text-align: center;
+    margin-bottom: 2px;
+}
+
+.logo {
+    width: 40%;
+    height: auto;
+    cursor: pointer;
+}

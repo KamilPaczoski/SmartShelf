@@ -1,19 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends "base.html" %}
+
+{% block extra_css %}
     <title>{{ book.title }}</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/book_detail.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/rating.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-</head>
+{% endblock %}
 
-<body>
+{% block content %}
     <div class="container">
         <div class="buttons">
-            <a href="{% url 'user_shelf' %}" class="button">Personal Shelf</a>
-            <a href="{% url 'book_list' %}" class="button">Browse Books</a>
+            <a href="{% url 'book_list' %}" class="button">Browse Other Books</a>
         </div>
         <div class="book-detail">
             <img src="{{ book.img }}" alt="{{ book.title }} cover" class="book-cover">
@@ -89,5 +88,4 @@
             {% endfor %}
         </div>
     </div>
-</body>
-</html>
+{% endblock %}

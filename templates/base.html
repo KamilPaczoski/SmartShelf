@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}SmartShelf{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+<div class="logo-container">
+    {% if request.path != '/accounts/login_register/' and request.path != '/user_shelf/' %}
+        <a href="{% url 'user_shelf' %}">
+            <img src="{% static 'images/LogoSmartShelf.png' %}" alt="SmartShelf Logo" class="logo">
+        </a>
+    {% else %}
+        <img src="{% static 'images/LogoSmartShelf.png' %}" alt="SmartShelf Logo" class="logo">
+    {% endif %}
+</div>
+{% block content %}{% endblock %}
+</body>
+</html>

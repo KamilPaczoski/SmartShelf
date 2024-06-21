@@ -1,13 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends "base.html" %}
+{% block extra_css %}
     <title>Login/Register</title>
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/user_shelf.css' %}">
-</head>
+{% endblock %}
 
-<body>
+{% block content %}
     <div class="container">
         <h1>Your Shelf</h1>
         <div class="buttons">
@@ -75,5 +73,4 @@
             </div>
         </div>
     </div>
-</body>
-</html>
+{% endblock %}
