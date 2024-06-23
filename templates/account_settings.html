@@ -75,7 +75,13 @@
             </div>
             <div class="info-box">
                 <h3>Penalties</h3>
-                <p>Coming Soon...</p>
+                {% if penalties %}
+                    {% for penalty in penalties %}
+                        <p class="{% if penalty.category in 'hate/threatening self-harm/instructions harassment/threatening' %}red{% else %}yellow{% endif %}">{{ penalty.category }}: {{ penalty.count }}</p>
+                    {% endfor %}
+                {% else %}
+                    <p class="green">Congratulations, you are a model user!</p>
+                {% endif %}
             </div>
         </div>
         <form method="post" action="{% url 'delete_account' %}">
@@ -118,8 +124,8 @@
 
     <!-- Delete Account Modal -->
     <dialog class="modal fade" id="deleteAccountModal" tabindex="-1"
-         aria-labelledby="deleteAccountModalLabel"
-         aria-hidden="true">
+            aria-labelledby="deleteAccountModalLabel"
+            aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">

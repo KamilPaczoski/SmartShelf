@@ -1,10 +1,11 @@
 from django import forms
 from .models import Review
 
+
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = ['review']
+        fields = ['content']
         widgets = {
-            'review': forms.Textarea(attrs={'rows': 4, 'cols': 50}),
+            'content': forms.Textarea(attrs={'rows': 4, 'cols': 50}),
         }

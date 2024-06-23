@@ -1,11 +1,13 @@
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.shortcuts import redirect, get_object_or_404
 from django.shortcuts import render
 
+from accounts.models import Penalty
 from .forms import ReviewForm
 from .models import Book, Rating, Shelf
 from .models import Review
+from OpenAI.moderation import increase_penalty_count, content_check
 
 
 @login_required
@@ -63,40 +65,53 @@ def book_list(request):
 @login_required
 def book_detail(request, pk):
     book = get_object_or_404(Book, pk=pk)
-    reviews = Review.objects.filter(book=book).order_by('-date_posted')
-    user_rating = Rating.objects.filter(user=request.user, book=book).first()
-    read_later = Shelf.objects.filter(user=request.user, book=book, shelf_type='read_later').exists()
-    favourite = Shelf.objects.filter(user=request.user, book=book, shelf_type='favourite').exists()
+    reviews = Review.objects.filter(book=book)
+    user_penalties = Penalty.objects.filter(user=request.user)
 
-    if request.method == 'POST':
-        if 'rating' in request.POST:
-            rating_value = float(request.POST.get('rating'))
-            rating, created = Rating.objects.update_or_create(
-                user=request.user,
-                book=book,
-                defaults={'rating': rating_value}
-            )
-            book.update_rating()
-            return redirect('book_detail', pk=book.pk)
-        else:
-            form = ReviewForm(request.POST)
-            if form.is_valid():
+    # Check if the user has 10 or more red penalties
+    red_penalty_count = user_penalties.filter(
+        category__in=['hate/threatening', 'self-harm/instructions', 'harassment/threatening']).aggregate(
+        count=Sum('count'))['count'] or 0
+    if red_penalty_count >= 10:
+        cannot_post_reviews = True
+    else:
+        cannot_post_reviews = False
+
+    if request.method == 'POST' and not cannot_post_reviews:
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            content = form.cleaned_data.get('content')
+            if content:
+                moderation_result = content_check(content)
+
+                if moderation_result['block']:
+                    increase_penalty_count(request.user, moderation_result['categories'])
+                    return redirect('book_detail', pk=book.pk)
+
                 review = form.save(commit=False)
                 review.user = request.user
                 review.book = book
                 review.save()
+
+                increase_penalty_count(request.user, moderation_result['categories'])
                 return redirect('book_detail', pk=book.pk)
+            else:
+                print("No content found in cleaned_data")
+        else:
+            print("Form is not valid")
+            print(form.errors)
     else:
         form = ReviewForm()
 
-    return render(request, 'book_detail.html', {
+    context = {
         'book': book,
         'reviews': reviews,
         'form': form,
-        'user_rating': user_rating,
-        'read_later': read_later,
-        'favourite': favourite
-    })
+        'cannot_post_reviews': cannot_post_reviews,
+        'penalties': user_penalties,
+    }
+
+    return render(request, 'book_detail.html', context)
 
 
 @login_required

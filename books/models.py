@@ -45,7 +45,7 @@ class Shelf(models.Model):
 class Review(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    review = models.TextField()
+    content = models.TextField()
     date_posted = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -63,3 +63,6 @@ class Rating(models.Model):
 
     def __str__(self):
         return f'{self.user} rated {self.book}'
+
+
+

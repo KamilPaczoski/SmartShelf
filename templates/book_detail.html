@@ -73,28 +73,31 @@
                 </div>
             </div>
         </div>
-        <div class="review-section">
-            <h3>Leave a Review</h3>
-            <form method="post" action="{% url 'book_detail' book.pk %}">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit">Send</button>
-            </form>
-        </div>
+
+
+        {% if cannot_post_reviews %}
+            <p class="warning">You cannot post reviews due to receiving multiple red warnings.</p>
+        {% else %}
+            <div class="review-section">
+                <h3>Leave a Review</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        {% endif %}
+
         <div class="reviews">
             <h3>Reviews</h3>
-            {% if user_rating %}
-                <div class="user-rating">
-                    <strong>Your latest rating: {{ user_rating.rating }} stars</strong>
-                </div>
-            {% endif %}
             {% for review in reviews %}
                 <div class="review">
                     <img src="{{ review.user.avatar.url }}" alt="{{ review.user.username }}'s avatar"
                          class="review-avatar">
                     <div class="review-content">
-                        <div><strong>{{ review.user.username }}</strong> on {{ review.date_posted }}</div>
-                        <p>{{ review.review }}</p>
+                        <strong>{{ review.user.username }}</strong>
+                        <span>{{ review.created_at }}</span>
+                        <p>{{ review.content }}</p>
                     </div>
                 </div>
             {% endfor %}

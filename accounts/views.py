@@ -3,7 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
 
-from .forms import UserUpdateForm, CustomPasswordChangeForm, CustomUserCreationForm
+from .forms import UserUpdateForm, CustomPasswordChangeForm, CustomUserForm
+from .models import Penalty
 
 
 def login_register(request):
@@ -22,7 +23,7 @@ def login_register(request):
                     else:
                         return redirect('user_shelf')
         elif 'register' in request.POST:
-            registration_form = CustomUserCreationForm(request.POST, request.FILES)
+            registration_form = CustomUserForm(request.POST, request.FILES)
             if registration_form.is_valid():
                 user = registration_form.save(commit=False)
                 if 'avatar' in request.FILES:
@@ -31,7 +32,7 @@ def login_register(request):
                 return redirect('login_register')
     else:
         login_form = AuthenticationForm()
-        registration_form = CustomUserCreationForm()
+        registration_form = CustomUserForm()
 
     return render(request, 'login_register.html', {
         'login_form': login_form,
@@ -41,6 +42,10 @@ def login_register(request):
 
 @login_required
 def account_settings(request):
+    user = request.user
+    user_form = CustomUserForm(instance=user)
+    password_form = CustomPasswordChangeForm(user=user)
+    penalties = Penalty.objects.filter(user=user)
     if request.method == 'POST':
         if 'update_details' in request.POST:
             user_form = UserUpdateForm(request.POST, request.FILES, instance=request.user)
@@ -67,7 +72,8 @@ def account_settings(request):
 
     return render(request, 'account_settings.html', {
         'user_form': user_form,
-        'password_form': password_form
+        'password_form': password_form,
+        'penalties': penalties
     })
 
 

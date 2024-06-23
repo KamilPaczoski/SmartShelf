@@ -107,3 +107,16 @@
     display: flex;
     justify-content: space-between;
 }
+
+/* Pena;ties font */
+.red {
+    color: red;
+}
+
+.yellow {
+    color: yellow;
+}
+
+.green {
+    color: green;
+}
