@@ -79,44 +79,28 @@ def book_detail(request, pk):
     tts = TextToSpeech.objects.filter(book=book).first()
 
     # Check if the user has 10 or more red penalties
-    red_penalty_count = user_penalties.filter(category__in=['hate', 'self-harm/instructions', 'harassment/threatening']).aggregate(
-        count=Sum('count'))['count'] or 0
+    red_penalty_count = \
+        user_penalties.filter(category__in=['hate', 'self-harm/instructions', 'harassment/threatening']).aggregate(
+            count=Sum('count'))['count'] or 0
     if red_penalty_count >= 10:
         cannot_post_reviews = True
     else:
         cannot_post_reviews = False
-    if 'rating' in request.POST:
-        rating_value = float(request.POST.get('rating'))
-        rating, created = Rating.objects.update_or_create(
-            user=request.user,
-            book=book,
-            defaults={'rating': rating_value}
-        )
-        book.update_rating()
+    if request.method == 'POST':
+        if 'rating' in request.POST:
+            Rating.objects.update_or_create(
+                user=request.user,
+                book=book,
+                defaults={'rating': float(request.POST.get('rating'))}
+            )
+            book.update_rating()
+        elif not cannot_post_reviews and (form := ReviewForm(request.POST)).is_valid() and (
+                content := form.cleaned_data.get('content')):
+            moderation_result = content_check(content)
+            increase_penalty_count(request.user, moderation_result['categories'])
+            if not moderation_result['block']:
+                Review.objects.create(user=request.user, book=book, content=content)
         return redirect('book_detail', pk=book.pk)
-    elif request.method == 'POST' and not cannot_post_reviews:
-        form = ReviewForm(request.POST)
-        if form.is_valid():
-            content = form.cleaned_data.get('content')
-            if content:
-                moderation_result = content_check(content)
-
-                if moderation_result['block']:
-                    increase_penalty_count(request.user, moderation_result['categories'])
-                    return redirect('book_detail', pk=book.pk)
-
-                review = form.save(commit=False)
-                review.user = request.user
-                review.book = book
-                review.save()
-
-                increase_penalty_count(request.user, moderation_result['categories'])
-                return redirect('book_detail', pk=book.pk)
-            else:
-                print("No content found in cleaned_data")
-        else:
-            print("Form is not valid")
-            print(form.errors)
     else:
         form = ReviewForm()
 
@@ -154,12 +138,8 @@ def generate_speech(request, pk):
         tts, _ = TextToSpeech.objects.get_or_create(book=book)
         try:
             filename = text_to_speech(book.desc, voice)
-            if voice == 'onyx':
-                tts.onyx_audio = f'{voice}/{filename}'
-            elif voice == 'nova':
-                tts.nova_audio = f'{voice}/{filename}'
+            setattr(tts, f'{voice}_audio', f'{voice}/{filename}')
             tts.save()
-
             return JsonResponse({'success': True})
         except Exception as e:
             print(e)
