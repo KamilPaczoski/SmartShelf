@@ -1,7 +1,5 @@
 from django.shortcuts import redirect
 
 
-
-
-def home(request):
+def startup(request):
     return redirect('login_register')

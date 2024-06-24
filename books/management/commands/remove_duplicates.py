@@ -20,7 +20,7 @@ class Command(BaseCommand):
             entries_to_keep = entries.first()
             entries.exclude(id=entries_to_keep.id).delete()
             self.stdout.write(self.style.SUCCESS(
-                f'Duplicate entries for user={user}, book={book}, shelf_type={shelf_type} have been removed.'
+                'Duplicates removed.'
             ))
 
-        self.stdout.write(self.style.SUCCESS('All duplicate entries have been removed.'))
+        self.stdout.write(self.style.SUCCESS('removed'))

@@ -1,4 +1,3 @@
-/* Browse Books Page */
 .filter-options {
     margin-bottom: 20px;
 }
@@ -54,7 +53,7 @@
 }
 
 .genre {
-    white-space: pre-line; /* Allows genres to display in multiple lines */
+    white-space: pre-line;
 }
 
 .rating, .totalratings {

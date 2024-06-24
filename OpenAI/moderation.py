@@ -21,21 +21,14 @@ def content_check(input: str):
 
 def increase_penalty_count(user, categories):
     for category in categories:
-        print(f"Category: {category}")
-        if category in ['hate/threatening', 'self-harm/instructions', 'harassment/threatening']:
-            category = category.split('/')[0]  # Simplify category for display purposes
-            penalty, _ = Penalty.objects.get_or_create(user=user, category=category)
-            penalty.count += 1
-            penalty.save()
-        else:
-            penalty, created = Penalty.objects.get_or_create(user=user, category=category)
-            penalty.count += 1
-            penalty.save()
+        simplified_category = category.split('/')[0] if category in ['hate/threatening', 'self-harm/instructions', 'harassment/threatening'] else category
+        penalty, _ = Penalty.objects.get_or_create(user=user, category=simplified_category)
+        penalty.count += 1
+        penalty.save()
 
-            # Check for yellow penalty escalation
-            if penalty.count >= 25:
-                penalty.count = 0
-                penalty.save()
-                red_penalty, created = Penalty.objects.get_or_create(user=user, category=f'{category}/threatening')
-                red_penalty.count += 1
-                red_penalty.save()
+        if penalty.count >= 25 and simplified_category != category:
+            penalty.count = 0
+            penalty.save()
+            red_penalty, _ = Penalty.objects.get_or_create(user=user, category=f'{category}/threatening')
+            red_penalty.count += 1
+            red_penalty.save()

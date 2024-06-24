@@ -23,7 +23,7 @@
 .book-item img {
     width: 100%;
     height: auto;
-    max-width: 150px; /* Ensure the images are not too large */
+    max-width: 150px;
     margin-bottom: 10px;
 }
 
