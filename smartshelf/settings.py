@@ -13,6 +13,8 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
+OPENAI_API_KEY = os.getenv('OPENAI_KEY')
+
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
@@ -25,7 +27,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'accounts',
     'books',
+    'OpenAI',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -9,7 +9,7 @@ urlpatterns = [
     path('api/accounts/', include('accounts.urls')),
     path('api/books/', include('books.urls')),
     path('accounts/', include('accounts.urls')),
-    path('', home, name='home'),  # Add this line to redirect the root URL to the login_register view
+    path('', home, name='home'),
 ]
 
 if settings.DEBUG:
