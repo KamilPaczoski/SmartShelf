@@ -28,8 +28,6 @@ def check_existing_audio(description, voice):
     if not os.path.exists(voice_directory):
         os.makedirs(voice_directory)
 
-    # Generate a hash for the description to use as a filename
-
     description_hash = hashlib.md5(description.encode()).hexdigest()
     existing_file = os.path.join(voice_directory, f"{description_hash}.opus")
 

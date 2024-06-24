@@ -19,26 +19,20 @@ from .models import Review
 @login_required
 def user_shelf(request):
     user = request.user
-    read_later_books = Shelf.objects.filter(user=user, shelf_type='read_later').select_related('book')
-    favourite_books = Shelf.objects.filter(user=user, shelf_type='favourite').select_related('book')
-    rated_books = Rating.objects.filter(user=user).select_related('book')
+    shelf_types = ['read_later', 'favourite', 'rated']
+    context = {'placeholder_img': '/static/images/book_cover_placeholder.png'}
 
-    placeholder_img = '/static/images/book_cover_placeholder.png'
-    num_placeholders = max(0, 6 - read_later_books.count())
-    read_later_books = list(read_later_books) + [Book(title='Placeholder', img=placeholder_img)] * num_placeholders
+    for shelf_type in shelf_types:
+        if shelf_type != 'rated':
+            books = Shelf.objects.filter(user=user, shelf_type=shelf_type).select_related('book')
+        else:
+            books = Rating.objects.filter(user=user).select_related('book')
 
-    num_placeholders = max(0, 6 - favourite_books.count())
-    favourite_books = list(favourite_books) + [Book(title='Placeholder', img=placeholder_img)] * num_placeholders
+        placeholder_books_count = max(0, 6 - books.count())
+        placeholder_books = [Book(title='Placeholder', img=context['placeholder_img'])] * placeholder_books_count
+        books = list(books) + placeholder_books
 
-    num_placeholders = max(0, 6 - rated_books.count())
-    rated_books = list(rated_books) + [Book(title='Placeholder', img=placeholder_img)] * num_placeholders
-
-    context = {
-        'read_later': read_later_books,
-        'favourite': favourite_books,
-        'rated': rated_books,
-        'placeholder_img': placeholder_img,
-    }
+        context[shelf_type] = books
 
     return render(request, 'user_shelf.html', context)
 
