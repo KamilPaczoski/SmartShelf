@@ -23,7 +23,6 @@ def user_shelf(request):
     favourite_books = Shelf.objects.filter(user=user, shelf_type='favourite').select_related('book')
     rated_books = Rating.objects.filter(user=user).select_related('book')
 
-    # Generate placeholder books if necessary
     placeholder_img = '/static/images/book_cover_placeholder.png'
     num_placeholders = max(0, 6 - read_later_books.count())
     read_later_books = list(read_later_books) + [Book(title='Placeholder', img=placeholder_img)] * num_placeholders
@@ -78,7 +77,6 @@ def book_detail(request, pk):
     user_penalties = Penalty.objects.filter(user=request.user)
     tts = TextToSpeech.objects.filter(book=book).first()
 
-    # Check if the user has 10 or more red penalties
     red_penalty_count = \
         user_penalties.filter(category__in=['hate', 'self-harm/instructions', 'harassment/threatening']).aggregate(
             count=Sum('count'))['count'] or 0
