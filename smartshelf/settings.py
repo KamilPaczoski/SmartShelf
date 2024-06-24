@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'accounts',
     'books',
+    'OpenAI',
 ]
 
 

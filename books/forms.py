@@ -6,6 +6,8 @@ class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ['content']
-        widgets = {
-            'content': forms.Textarea(attrs={'rows': 4, 'cols': 50}),
-        }
+
+    content = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 4, 'placeholder': 'Write your review here...'}),
+        required=True
+    )
