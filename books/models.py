@@ -4,11 +4,11 @@ from django.db.models import Avg, Count
 
 
 class Book(models.Model):
-    title = models.CharField(max_length=200)
-    author = models.CharField(max_length=200)
+    title = models.CharField(max_length=300)
+    author = models.CharField(max_length=300)
     bookformat = models.CharField(max_length=50)
     desc = models.TextField()
-    genre = models.CharField(max_length=200)
+    genre = models.CharField(max_length=400)
     img = models.URLField()
     isbn = models.CharField(max_length=13)
     pages = models.IntegerField()
