@@ -16,7 +16,7 @@ SmartShelf is a web application for browsing, rating, and reviewing books with i
 - AI-based content moderation
 - AI-based text-to-speech for book descriptions
 - Search and sort books by title, author, rating, and total ratings
-- System of penalties based on user reviews
+- System of auto-moderation distributing penalties if based on content of user reviews
 
 ## Tech Stack
 
@@ -27,7 +27,7 @@ SmartShelf is a web application for browsing, rating, and reviewing books with i
 - CSS3
 - Bootstrap
 - OpenAI API
-- elements of JavaScript
+- JavaScript
 
 ## Setup and Installation
 

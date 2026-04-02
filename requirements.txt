@@ -8,3 +8,4 @@ Pillow
 pandas~=2.2.2
 SQLAlchemy~=2.0.30
 openai~=1.35.3
+httpx<0.28
