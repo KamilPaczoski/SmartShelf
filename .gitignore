@@ -1,0 +1,15 @@
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+
+#venvs
+venv311
+venv
+
+#generated files
+*.opus
+
+#.env
+.env

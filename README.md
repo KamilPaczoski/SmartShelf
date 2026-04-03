@@ -23,7 +23,7 @@ They are not suitable for production use as-is.
 - AI-based content moderation
 - AI-based text-to-speech for book descriptions
 - Search and sort books by title, author, rating, and total ratings
-- System of penalties based on user reviews
+- System of auto-moderation distributing penalties if based on content of user reviews
 
 ## Tech Stack
 

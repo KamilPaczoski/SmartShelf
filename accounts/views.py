@@ -8,22 +8,28 @@ from .models import Penalty
 
 
 def login_register(request):
+    login_form = AuthenticationForm(request=request)
+    registration_form = CustomUserForm()
+
     if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST) if 'login' in request.POST else CustomUserForm(request.POST,
-                                                                                                    request.FILES)
-        if form.is_valid():
-            if 'login' in request.POST:
-                user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+        if 'login' in request.POST:
+            login_form = AuthenticationForm(request=request, data=request.POST)
+            if login_form.is_valid():
+                user = authenticate(
+                    request,
+                    username=login_form.cleaned_data['username'],
+                    password=login_form.cleaned_data['password']
+                )
                 if user:
                     login(request, user)
-                    return redirect('admin_home' if user.is_staff else 'user_shelf')
-            else:
-                user = form.save(commit=False)
+                    return redirect('admin:index' if user.is_staff else 'user_shelf')
+        elif 'register' in request.POST:
+            registration_form = CustomUserForm(request.POST, request.FILES)
+            if registration_form.is_valid():
+                user = registration_form.save(commit=False)
                 user.avatar = request.FILES.get('avatar', user.avatar)
                 user.save()
                 return redirect('login_register')
-    else:
-        login_form, registration_form = AuthenticationForm(), CustomUserForm()
 
     return render(request, 'login_register.html', {'login_form': login_form, 'registration_form': registration_form})
 

@@ -1,4 +1,5 @@
 import json
+import logging
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -14,6 +15,9 @@ from accounts.models import Penalty
 from .forms import ReviewForm
 from .models import Book, Rating, Shelf
 from .models import Review
+
+
+logger = logging.getLogger(__name__)
 
 
 @login_required
@@ -123,17 +127,28 @@ def add_to_shelf(request, pk, shelf_type):
 @csrf_exempt
 @login_required
 def generate_speech(request, pk):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        voice = data.get('voice')
-        book = get_object_or_404(Book, pk=pk)
-        tts, _ = TextToSpeech.objects.get_or_create(book=book)
-        try:
-            filename = text_to_speech(book.desc, voice)
-            setattr(tts, f'{voice}_audio', f'{voice}/{filename}')
-            tts.save()
-            return JsonResponse({'success': True})
-        except Exception as e:
-            print(e)
-            return JsonResponse({'success': False})
-    return JsonResponse({'success': False})
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Method not allowed.'}, status=405)
+
+    try:
+        data = json.loads(request.body or '{}')
+    except json.JSONDecodeError:
+        return JsonResponse({'success': False, 'error': 'Invalid JSON payload.'}, status=400)
+
+    voice = (data.get('voice') or '').lower()
+    if voice not in {'onyx', 'nova'}:
+        return JsonResponse({'success': False, 'error': 'Unsupported voice selected.'}, status=400)
+
+    book = get_object_or_404(Book, pk=pk)
+    if not book.desc:
+        return JsonResponse({'success': False, 'error': 'Book description is empty.'}, status=400)
+
+    tts, _ = TextToSpeech.objects.get_or_create(book=book)
+    try:
+        filename = text_to_speech(book.desc, voice)
+        setattr(tts, f'{voice}_audio', f'{voice}/{filename}')
+        tts.save()
+        return JsonResponse({'success': True})
+    except Exception as exc:
+        logger.exception('Failed to generate speech for book id=%s voice=%s', book.pk, voice)
+        return JsonResponse({'success': False, 'error': str(exc)}, status=502)

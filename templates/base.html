@@ -3,11 +3,23 @@
 <head>
     <title>{% block title %}SmartShelf{% endblock %}</title>
     {% load static %}
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = globalThis.matchMedia && globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+            document.documentElement.dataset.theme = theme;
+            document.documentElement.classList.toggle('theme-dark', theme === 'dark');
+        })();
+    </script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
 <div class="header">
+    <div class="left-controls">
+        <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">Dark mode</button>
+    </div>
     <div class="logo-container">
         {% if request.path != '/accounts/login_register/' %}
             <a href="{% url 'user_shelf' %}">
@@ -27,6 +39,41 @@
     </div>
 </div>
 {% block content %}{% endblock %}
+<script>
+    (function () {
+        const toggleButton = document.getElementById('theme-toggle');
+        if (!toggleButton) {
+            return;
+        }
+
+        function setTheme(theme) {
+            document.documentElement.dataset.theme = theme;
+            document.documentElement.classList.toggle('theme-dark', theme === 'dark');
+            if (document.body) {
+                document.body.dataset.theme = theme;
+                document.body.classList.toggle('theme-dark', theme === 'dark');
+            }
+            localStorage.setItem('theme', theme);
+        }
+
+        function getTheme() {
+            return document.documentElement.dataset.theme || 'light';
+        }
+
+        function applyLabel() {
+            toggleButton.textContent = getTheme() === 'dark' ? 'Light mode' : 'Dark mode';
+        }
+
+        toggleButton.addEventListener('click', function () {
+            const nextTheme = getTheme() === 'dark' ? 'light' : 'dark';
+            setTheme(nextTheme);
+            applyLabel();
+        });
+
+        setTheme(getTheme());
+        applyLabel();
+    })();
+</script>
 {% block extra_js %}{% endblock %}
 </body>
 </html>

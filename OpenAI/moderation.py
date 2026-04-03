@@ -1,11 +1,27 @@
+import logging
+
 from django.conf import settings
+import httpx
 from openai import OpenAI
 
 from accounts.models import Penalty
 
 
+logger = logging.getLogger(__name__)
+
+
 def content_check(input: str):
-    client = OpenAI(api_key=settings.OPENAI_API_KEY)
+    if not settings.OPENAI_API_KEY:
+        raise ValueError('Missing OPENAI_KEY environment variable.')
+
+    try:
+        client = OpenAI(api_key=settings.OPENAI_API_KEY)
+    except TypeError as exc:
+        if 'proxies' not in str(exc):
+            raise
+        logger.warning('OpenAI/httpx compatibility issue detected. Retrying with explicit httpx client.')
+        client = OpenAI(api_key=settings.OPENAI_API_KEY, http_client=httpx.Client())
+
     response = client.moderations.create(input=input)
     categories = response.results[0].categories
     categories_dict = {
