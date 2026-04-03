@@ -2,6 +2,13 @@
 
 SmartShelf is a web application for browsing, rating, and reviewing books with integrated AI functionalities for content moderation and text-to-speech. This project is built using Django and leverages OpenAI's API for advanced features.
 
+## **Disclaimer**  
+The instructions in this README are intended for running **SmartShelf** in a development environment.  
+They are not suitable for production use as-is.  
+- Settings such as `DEBUG=True` and exposed API keys are only safe for local development.  
+- For deployment, you must disable debug mode, and secure environment variables.  
+- The setup steps assume you are acting as a developer, not an end user.
+
 ## Table of Contents
 
 - [Features](#features)
@@ -27,7 +34,7 @@ SmartShelf is a web application for browsing, rating, and reviewing books with i
 - CSS3
 - Bootstrap
 - OpenAI API
-- JavaScript
+- elements of JavaScript
 
 ## Setup and Installation
 
